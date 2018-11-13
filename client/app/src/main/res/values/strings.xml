@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Durak</string>
+    <string name="title_matches">Matches</string>
+    <string name="title_leaderboard">Leaderboard</string>
+    <string name="title_rules">Rules</string>
+    <string name="title_login">Login</string>
+    <string name="title_login_failed">Login failed</string>
+    <string name="button_create_match">Create match</string>
+    <string name="button_start_match">Start match</string>
+    <string name="placeholder">[Placeholder]</string>
+</resources>

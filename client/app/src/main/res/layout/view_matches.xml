@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:id="@+id/matches"
+    android:layout_height="match_parent"
+>
+
+    <ListView
+        android:id="@+id/match_list"
+        android:layout_marginBottom="58dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/create_match_button"
+    />
+
+    <Button
+        android:id="@+id/create_match_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_create_match"
+        app:layout_constraintTop_toBottomOf="@id/match_list"
+    />
+
+</android.support.constraint.ConstraintLayout>
