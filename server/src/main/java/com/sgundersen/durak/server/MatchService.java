@@ -75,7 +75,7 @@ public class MatchService {
         }
         Player player = PlayerService.getPlayer(request.getSession().getId());
         if (player == null) {
-            System.err.println("Player not found. Invalid session maybe?");
+            System.err.println("Player not found. Invalid session: " + request.getSession().getId());
             return jsonb.toJson(false);
         }
         MatchServer server = servers.get(matchId);

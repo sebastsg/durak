@@ -14,7 +14,6 @@ import com.sgundersen.durak.core.net.MatchConfiguration;
 import com.sgundersen.durak.core.net.MatchLobbyInfo;
 import com.sgundersen.durak.core.net.MatchLobbyInfoList;
 import com.sgundersen.durak.net.AsyncCreateMatchTask;
-import com.sgundersen.durak.net.AsyncGetMatchListTask;
 import com.sgundersen.durak.net.AsyncJoinMatchTask;
 import com.sgundersen.durak.net.timer.AsyncGetMatchListTimerTask;
 

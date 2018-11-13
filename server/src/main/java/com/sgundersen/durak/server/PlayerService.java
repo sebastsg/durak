@@ -109,7 +109,7 @@ public class PlayerService {
         String accountId = authResponse.getSub();*/
         String accountId = loginAttempt.getAccountId();
         HttpSession session = request.getSession();
-        System.out.println("Player " + loginAttempt.getName() + " (" + loginAttempt.getEmail() + ") [" + accountId + "] has logged in");
+        System.out.println("Player " + loginAttempt.getName() + " (" + loginAttempt.getEmail() + ") [" + accountId + "] has logged in. Session: " + session.getId());
         players.put(session.getId(), new Player(loginAttempt.getName(), loginAttempt.getEmail(), accountId));
         return jsonb.toJson(true, Boolean.class);
     }
