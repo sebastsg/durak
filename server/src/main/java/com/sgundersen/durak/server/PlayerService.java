@@ -4,6 +4,7 @@ import com.sgundersen.durak.core.net.LoginAttempt;
 import com.sgundersen.durak.server.auth.GoogleAuthResponse;
 
 import javax.ejb.Singleton;
+import javax.ejb.Stateless;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
@@ -22,19 +23,20 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Path("player")
 @Produces(MediaType.TEXT_PLAIN)
-@Singleton
+@Stateless
 public class PlayerService {
 
+    // TODO: Not store this here.
     private static final String CLIENT_ID = "317207620584-26b2id4cr2i4shgan1r6vppk8if5l8h8.apps.googleusercontent.com";
 
     private static final Jsonb jsonb = JsonbBuilder.create();
-    private static final Map<String, Player> players = new HashMap<>();
+    private static final Map<String, Player> players = new ConcurrentHashMap<>();
 
     public static Player getPlayer(String sessionId) {
         return players.get(sessionId);
@@ -43,7 +45,7 @@ public class PlayerService {
     public static List<Player> getPlayersInMatch(int matchId) {
         List<Player> playersInMatch = new ArrayList<>();
         for (Player player : players.values()) {
-            if (player.getActiveMatchId() == matchId) {
+            if (player.getActiveMatchId().get() == matchId) {
                 playersInMatch.add(player);
             }
         }

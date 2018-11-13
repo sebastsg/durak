@@ -3,24 +3,25 @@ package com.sgundersen.durak.server;
 import com.sgundersen.durak.core.match.MatchServer;
 import com.sgundersen.durak.core.net.*;
 
-import javax.ejb.Singleton;
+import javax.ejb.Stateless;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Path("match")
 @Produces(MediaType.APPLICATION_JSON)
-@Singleton
+@Stateless
 public class MatchService {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
-    private static final Map<Integer, MatchServer> servers = new HashMap<>();
-    private static int serverIdCounter = 0;
+    private static final Map<Integer, MatchServer> servers = new ConcurrentHashMap<>();
+    private static AtomicInteger serverIdCounter = new AtomicInteger(0);
 
     @GET
     @Path("list")
@@ -46,9 +47,9 @@ public class MatchService {
         if (!configuration.isValid()) {
             return "";
         }
-        serverIdCounter++;
-        MatchServer server = new MatchServer(serverIdCounter, configuration);
-        servers.put(serverIdCounter, server);
+        int newId = serverIdCounter.incrementAndGet();
+        MatchServer server = new MatchServer(newId, configuration);
+        servers.put(newId, server);
         int playerId = server.addPlayer();
         if (playerId == -1) {
             System.err.println("Unable to add player to match");
@@ -59,9 +60,9 @@ public class MatchService {
             System.err.println("Player not found. Invalid session maybe?");
             return "";
         }
-        player.setActiveMatchId(serverIdCounter);
-        player.setActiveMatchPlayerId(playerId);
-        MatchLobbyInfo info = new MatchLobbyInfo(serverIdCounter, player.getName() + "'s lobby", configuration.getMaxPlayers(), server.getPlayerCount());
+        player.getActiveMatchId().set(newId);
+        player.getActiveMatchPlayerId().set(playerId);
+        MatchLobbyInfo info = new MatchLobbyInfo(newId, player.getName() + "'s lobby", configuration.getMaxPlayers(), server.getPlayerCount());
         return jsonb.toJson(info);
     }
 
@@ -85,8 +86,8 @@ public class MatchService {
         if (playerId == -1) {
             return jsonb.toJson(false);
         }
-        player.setActiveMatchId(matchId);
-        player.setActiveMatchPlayerId(playerId);
+        player.getActiveMatchId().set(matchId);
+        player.getActiveMatchPlayerId().set(playerId);
         return jsonb.toJson(true);
     }
 
@@ -98,7 +99,7 @@ public class MatchService {
             System.err.println("Player not found. Invalid session maybe?");
             return "";
         }
-        int matchId = player.getActiveMatchId();
+        int matchId = player.getActiveMatchId().get();
         MatchServer server = servers.get(matchId);
         MatchLobbyDetails lobbyDetails = new MatchLobbyDetails();
         for (Player playerInMatch : PlayerService.getPlayersInMatch(matchId)) {
@@ -116,7 +117,7 @@ public class MatchService {
             System.err.println("Player not found. Invalid session maybe?");
             return jsonb.toJson(false);
         }
-        int matchId = player.getActiveMatchId();
+        int matchId = player.getActiveMatchId().get();
         MatchServer server = servers.get(matchId);
         if (server.isStarted()) {
             System.err.println("Cannot start an already started match");
@@ -142,7 +143,7 @@ public class MatchService {
             System.err.println("Invalid session " + request.getSession().getId() + " at " + request.getRequestURI());
             return "";
         }
-        MatchServer server = servers.get(player.getActiveMatchId());
+        MatchServer server = servers.get(player.getActiveMatchId().get());
         if (server == null) {
             System.err.println("Player is not in a match");
             return "";
@@ -151,7 +152,7 @@ public class MatchService {
             System.err.println("The match has not started yet.");
             return "";
         }
-        int playerId = player.getActiveMatchPlayerId();
+        int playerId = player.getActiveMatchPlayerId().get();
         MatchClientState state = server.getClientState(playerId);
         if (state == null) {
             System.err.println("There is no state for player " + playerId);
@@ -172,14 +173,15 @@ public class MatchService {
             System.err.println("Invalid session " + request.getSession().getId() + " at " + request.getRequestURI());
             return "";
         }
-        MatchServer server = servers.get(player.getActiveMatchId());
+        MatchServer server = servers.get(player.getActiveMatchId().get());
         if (server == null) {
             System.err.println("Player is not in a match");
             return "";
         }
         PlayerAction action = jsonb.fromJson(json, PlayerAction.class);
-        server.processAction(player.getActiveMatchPlayerId(), action);
-        return jsonb.toJson(server.getClientState(player.getActiveMatchPlayerId()));
+        int playerId = player.getActiveMatchPlayerId().get();
+        server.processAction(playerId, action);
+        return jsonb.toJson(server.getClientState(playerId));
     }
 
 }
