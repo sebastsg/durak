@@ -2,9 +2,6 @@ package com.sgundersen.durak.server;
 
 import com.sgundersen.durak.core.match.MatchServer;
 import com.sgundersen.durak.core.net.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.ejb.Singleton;
 import javax.json.bind.Jsonb;
