@@ -2,6 +2,7 @@ package com.sgundersen.durak.net;
 
 import android.support.v7.app.AlertDialog;
 
+import com.sgundersen.durak.MainActivity;
 import com.sgundersen.durak.core.net.LoginAttempt;
 import com.sgundersen.durak.ui.LoginView;
 
@@ -24,14 +25,10 @@ public class AsyncLoginTask extends AsyncHttpTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         if (result == null) {
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(loginView.getActivity());
-            alertBuilder.setMessage("Login response is null! What the fuck").setTitle("wtf");
-            AlertDialog dialog = alertBuilder.create();
-            dialog.show();
+            loginView.getActivity().showAlert("Failed to connect to server.");
             log.error("Login response is null!");
             return;
         }
-        log.info("Server responded with: {}", result);
         if (result) {
             log.info("Login was successful.");
             loginView.onLoginSuccess();

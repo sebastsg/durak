@@ -25,10 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
     private LoginView loginView;
 
-
-    private static MainActivity staticSelf;
-    public static void showAlert(String message) {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(staticSelf);
+    public void showAlert(String message) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setMessage(message).setTitle("Info");
         AlertDialog dialog = alertBuilder.create();
         dialog.show();
@@ -37,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        staticSelf = this;
         setContentView(R.layout.activity_main);
         layout = findViewById(R.id.container);
         loginView = new LoginView(this);

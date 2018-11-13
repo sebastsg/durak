@@ -51,13 +51,9 @@ public class LoginView implements View.OnClickListener {
     }
 
     public void onLoginFail() {
+        activity.showAlert("The specified login is invalid.");
         TextView message = activity.getLayout().findViewById(R.id.login_message);
         message.setText(R.string.title_login_failed);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setMessage("Failed to login with Google").setTitle("Login failed");
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     private void tryLastSignIn() {
@@ -76,20 +72,14 @@ public class LoginView implements View.OnClickListener {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             if (account == null) {
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
-                alertBuilder.setMessage("Failed to get the specified Google account").setTitle("Error");
-                AlertDialog dialog = alertBuilder.create();
-                dialog.show();
+                activity.showAlert("Failed to sign in with the specified Google account.");
                 return;
             }
             LoginAttempt attempt = new LoginAttempt(account.getDisplayName(), account.getEmail(), account.getId(), account.getIdToken());
             AsyncLoginTask loginTask = new AsyncLoginTask(this, attempt);
             loginTask.execute();
         } catch (ApiException e) {
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
-            alertBuilder.setMessage("A sign-in error occurred: " + e.getMessage()).setTitle("Sign-in error");
-            AlertDialog dialog = alertBuilder.create();
-            dialog.show();
+            activity.showAlert("An error occurred while signing in: " + e.getMessage());
             log.error(e.getMessage());
         }
     }
