@@ -59,6 +59,7 @@ public class LoginView implements View.OnClickListener {
     private void tryLastSignIn() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity.getBaseContext());
         if (account != null) {
+            activity.setPlayerName(account.getDisplayName());
             LoginAttempt attempt = new LoginAttempt(account.getDisplayName(), account.getEmail(), account.getId(), account.getIdToken());
             AsyncLoginTask loginTask = new AsyncLoginTask(this, attempt);
             loginTask.execute();
@@ -75,6 +76,7 @@ public class LoginView implements View.OnClickListener {
                 activity.showAlert("Failed to sign in with the specified Google account.");
                 return;
             }
+            activity.setPlayerName(account.getDisplayName());
             LoginAttempt attempt = new LoginAttempt(account.getDisplayName(), account.getEmail(), account.getId(), account.getIdToken());
             AsyncLoginTask loginTask = new AsyncLoginTask(this, attempt);
             loginTask.execute();

@@ -62,7 +62,6 @@ public class MatchesView implements TabView, View.OnClickListener, AdapterView.O
             log.error("Received null match list");
             return;
         }
-        log.info("Refreshing match list");
         lobbyList = list;
         List<String> matches = new ArrayList<>();
         for (MatchLobbyInfo lobby : list.getLobbies()) {
@@ -75,7 +74,8 @@ public class MatchesView implements TabView, View.OnClickListener, AdapterView.O
     @Override
     public void onClick(View view) {
         if (view.getId() == createButton.getId()) {
-            MatchConfiguration configuration = new MatchConfiguration(6, 2);
+            String lobbyName = activity.getPlayerName() + "'s lobby";
+            MatchConfiguration configuration = new MatchConfiguration(lobbyName, 6, 2);
             AsyncCreateMatchTask createMatchTask = new AsyncCreateMatchTask(this, configuration);
             createMatchTask.execute();
         }

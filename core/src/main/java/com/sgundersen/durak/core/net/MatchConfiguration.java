@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MatchConfiguration {
 
+    private String name;
     private int lowestRank;
     private int maxPlayers;
 

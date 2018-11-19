@@ -15,4 +15,9 @@ public class Player {
     private final AtomicInteger activeMatchId = new AtomicInteger(-1);
     private final AtomicInteger activeMatchPlayerId = new AtomicInteger(-1);
 
+    public void setActiveMatch(int matchId, int playerId) {
+        activeMatchId.set(matchId);
+        activeMatchPlayerId.set(playerId);
+    }
+
 }

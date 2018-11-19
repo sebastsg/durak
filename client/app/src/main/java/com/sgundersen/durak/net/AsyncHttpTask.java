@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AsyncHttpTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
     // TODO: Should be stored somewhere else.
-    private static final String HOST_BASE = "http://durak.sgundersen.com:8085/durak-server/api/";
+    private static final String HOST_BASE = "http://durak-dev.sgundersen.com:8085/durak-server/api/";
 
     protected final Gson gson = new Gson();
 
@@ -31,7 +31,6 @@ public abstract class AsyncHttpTask<Params, Progress, Result> extends AsyncTask<
 
     private void setProperties(HttpURLConnection connection) {
         if (cookies != null && !cookies.isEmpty()) {
-            log.info("Sending cookies: {}", cookies);
             connection.setRequestProperty("Cookie", cookies);
         }
     }

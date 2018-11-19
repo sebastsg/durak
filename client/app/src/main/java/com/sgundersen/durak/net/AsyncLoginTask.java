@@ -1,8 +1,5 @@
 package com.sgundersen.durak.net;
 
-import android.support.v7.app.AlertDialog;
-
-import com.sgundersen.durak.MainActivity;
 import com.sgundersen.durak.core.net.LoginAttempt;
 import com.sgundersen.durak.ui.LoginView;
 

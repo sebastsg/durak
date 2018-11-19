@@ -13,6 +13,7 @@ import com.sgundersen.durak.ui.OnBottomNavigationItemSelectedListener;
 import com.sgundersen.durak.ui.TabView;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
     private TabView tabView;
     private BottomNavigationView navigationView;
     private LoginView loginView;
+
+    @Setter
+    @Getter
+    private String playerName;
 
     public void showAlert(String message) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);

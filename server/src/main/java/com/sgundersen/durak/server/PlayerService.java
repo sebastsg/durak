@@ -3,7 +3,6 @@ package com.sgundersen.durak.server;
 import com.sgundersen.durak.core.net.LoginAttempt;
 import com.sgundersen.durak.server.auth.GoogleAuthResponse;
 
-import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -93,7 +92,6 @@ public class PlayerService {
     public String login(@Context HttpServletRequest request, String json) {
         LoginAttempt loginAttempt = jsonb.fromJson(json, LoginAttempt.class);
         if (loginAttempt == null) {
-            System.err.println("Invalid request");
             return jsonb.toJson(false, Boolean.class);
         }
         /*GoogleAuthResponse authResponse = validateTokenId(loginAttempt.getCurrentTokenId());
