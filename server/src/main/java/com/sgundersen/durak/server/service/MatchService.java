@@ -90,6 +90,22 @@ public class MatchService {
         return jsonb.toJson(server.getClientState(handId));
     }
 
+    @GET
+    @Path("recordings")
+    public String recordings() {
+        return jsonb.toJson(recordedMatchDao.getAllMeta());
+    }
+
+    @GET
+    @Path("recording/{id}")
+    public String recording(@PathParam("id") int matchId) {
+        RecordedMatch recordedMatch = recordedMatchDao.find(matchId);
+        if (recordedMatch == null) {
+            return "";
+        }
+        return jsonb.toJson(recordedMatch);
+    }
+
     private void recordMatchState(MatchServer server) {
         RecordedMatch recordedMatch = recordedMatchDao.find(server.getId());
         if (recordedMatch == null) {

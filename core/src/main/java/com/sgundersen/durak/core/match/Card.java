@@ -1,14 +1,16 @@
 package com.sgundersen.durak.core.match;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Card {
 
-    private final CardSuit suit;
-    private final int rank;
+    private CardSuit suit;
+    private int rank;
 
     public String getRankName() {
         switch (rank) {

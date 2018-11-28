@@ -21,7 +21,7 @@ public class PlayerProfileDao {
     }
 
     public PlayerProfile find(String googleAccountId) {
-        Query query = entityManager.createNamedQuery("PlayerProfile.findOne", PlayerProfile.class);
+        Query query = entityManager.createNamedQuery("PlayerProfile.find", PlayerProfile.class);
         query.setParameter("id", googleAccountId);
         List results = query.getResultList();
         if (results.isEmpty()) {

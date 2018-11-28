@@ -3,6 +3,7 @@ package com.sgundersen.durak.server.db;
 import com.sgundersen.durak.core.net.match.MatchClientState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.json.bind.Jsonb;
@@ -17,42 +18,58 @@ import java.util.List;
 @Data
 @Entity
 @NamedQueries({
-        @NamedQuery(name = "RecordedMatch.findOne", query = "select m from RecordedMatch m where m.id = :id"),
-        @NamedQuery(name = "RecordedMatch.getAll", query = "select m from RecordedMatch m order by m.createdAt desc")
+        @NamedQuery(name = "RecordedMatch.find", query = "select m from RecordedMatch m where m.id = :id")
 })
 public class RecordedMatch {
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class Snapshot {
+    public static class Snapshot {
         private List<MatchClientState> clientStates = new ArrayList<>();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SnapshotList {
+        private List<Snapshot> snapshots = new ArrayList<>();
     }
 
     private static final Jsonb jsonb = JsonbBuilder.create();
 
     @Id
-    @GeneratedValue
     private long id;
 
     private Instant createdAt;
-
     private String name;
-    private String snapshotsAsJson;
+
+    @Lob
+    private String snapshots;
+
+    public RecordedMatch(long id, Instant createdAt, String name) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.name = name;
+        snapshots = "";
+    }
 
     @PrePersist
     protected void onBeingCreated() {
         createdAt = Instant.now();
     }
 
-    public List<Snapshot> getSnapshots() {
-        return jsonb.fromJson(snapshotsAsJson, new ArrayList<Snapshot>(){}.getClass().getGenericSuperclass());
+    private SnapshotList convertedSnapshots() {
+        if (snapshots == null || snapshots.isEmpty()) {
+            return new SnapshotList();
+        }
+        return jsonb.fromJson(snapshots, SnapshotList.class);
     }
 
     public void addSnapshot(List<MatchClientState> snapshot) {
-        List<Snapshot> snapshots = getSnapshots();
-        snapshots.add(new Snapshot(snapshot));
-        snapshotsAsJson = jsonb.toJson(snapshots);
+        SnapshotList snapshotList = convertedSnapshots();
+        snapshotList.getSnapshots().add(new Snapshot(snapshot));
+        snapshots = jsonb.toJson(snapshotList);
     }
 
 }

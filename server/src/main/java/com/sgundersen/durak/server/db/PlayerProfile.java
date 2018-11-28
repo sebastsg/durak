@@ -12,7 +12,7 @@ import java.time.Instant;
 @Data
 @Entity
 @NamedQueries({
-        @NamedQuery(name = "PlayerProfile.findOne", query = "select p from PlayerProfile p where p.googleAccountId = :id"),
+        @NamedQuery(name = "PlayerProfile.find", query = "select p from PlayerProfile p where p.googleAccountId = :id"),
         @NamedQuery(name = "PlayerProfile.getAll", query = "select p from PlayerProfile p order by p.createdAt desc"),
         @NamedQuery(name = "PlayerProfile.getTop", query = "select p from PlayerProfile p order by p.ratio desc")
 })
