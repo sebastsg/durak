@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_3_0-1.dtd">
+<resources>
+    <jdbc-resource pool-name="durakpool" jndi-name="java:app/jdbc/durak"/>
+    <jdbc-connection-pool name="durakpool" res-type="javax.sql.DataSource" datasource-classname="org.postgresql.jdbc3.Jdbc3PoolingDataSource">
+        <property name="user" value="durak"/>
+        <property name="password" value="durak"/>
+        <property name="url" value="jdbc:postgresql:durak"/>
+    </jdbc-connection-pool>
+</resources>

@@ -4,19 +4,19 @@
     <item
         android:id="@+id/navigation_matches"
         android:checkable="false"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/icon_matches"
         android:title="@string/title_matches" />
 
     <item
         android:id="@+id/navigation_leaderboard"
         android:checkable="false"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/icon_leaderboard"
         android:title="@string/title_leaderboard" />
 
     <item
         android:id="@+id/navigation_rules"
         android:checkable="false"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/icon_rules"
         android:title="@string/title_rules" />
 
 </menu>

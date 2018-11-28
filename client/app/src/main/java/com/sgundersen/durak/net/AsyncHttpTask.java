@@ -41,7 +41,7 @@ public abstract class AsyncHttpTask<Params, Progress, Result> extends AsyncTask<
         }
         connection.setDoOutput(true);
         connection.setFixedLengthStreamingMode(body.length());
-        connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        connection.setRequestProperty("Content-Type", "application/json");
         try (OutputStream stream = connection.getOutputStream()) {
             stream.write(body.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
@@ -105,6 +105,10 @@ public abstract class AsyncHttpTask<Params, Progress, Result> extends AsyncTask<
 
     protected String post(String path, String body) {
         return request("POST", path, body);
+    }
+
+    protected String post(String path) {
+        return post(path, "");
     }
 
 }

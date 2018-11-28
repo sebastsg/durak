@@ -4,8 +4,15 @@
     <string name="title_leaderboard">Leaderboard</string>
     <string name="title_rules">Rules</string>
     <string name="title_login">Login</string>
-    <string name="title_login_failed">Login failed</string>
     <string name="button_create_match">Create match</string>
     <string name="button_start_match">Start match</string>
     <string name="placeholder">[Placeholder]</string>
+    <string name="rank">Rank</string>
+    <string name="name">Name</string>
+    <string name="victories">Victories</string>
+    <string name="defeats">Defeats</string>
+    <string name="ratio">Ratio</string>
+    <string name="current">Current</string>
+    <string name="max">Max</string>
+    <string name="per_turn">Per turn</string>
 </resources>

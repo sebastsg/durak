@@ -2,7 +2,7 @@ package com.sgundersen.durak.draw;
 
 import com.sgundersen.durak.core.match.Bout;
 import com.sgundersen.durak.core.match.Card;
-import com.sgundersen.durak.core.net.MatchClientState;
+import com.sgundersen.durak.core.net.match.MatchClientState;
 import com.sgundersen.durak.match.MatchClient;
 
 import org.joml.Vector2f;

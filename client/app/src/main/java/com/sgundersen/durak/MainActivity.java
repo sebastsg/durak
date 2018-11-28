@@ -2,96 +2,63 @@ package com.sgundersen.durak;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 
-import com.sgundersen.durak.ui.LoginView;
-import com.sgundersen.durak.ui.OnBottomNavigationItemSelectedListener;
-import com.sgundersen.durak.ui.TabView;
+import com.sgundersen.durak.net.auth.GoogleLogin;
+import com.sgundersen.durak.ui.LoginFragment;
+import com.sgundersen.durak.ui.MainActivityFragment;
+import com.sgundersen.durak.ui.NavigationFragment;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class MainActivity extends AppCompatActivity {
 
-    @Getter
-    private ConstraintLayout layout;
-
-    private TabView tabView;
-    private BottomNavigationView navigationView;
-    private LoginView loginView;
-
-    @Setter
-    @Getter
-    private String playerName;
-
-    public void showAlert(String message) {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        alertBuilder.setMessage(message).setTitle("Info");
-        AlertDialog dialog = alertBuilder.create();
-        dialog.show();
-    }
+    private MainActivityFragment mainFragment;
+    private MainActivityFragment navigationFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        layout = findViewById(R.id.container);
-        loginView = new LoginView(this);
-        loginView.show();
+        setMainFragment(new LoginFragment());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 9001 && loginView != null) {
-            loginView.onSignInAttemptFinished(data);
+        if (requestCode == GoogleLogin.RC_SIGN_IN) {
+            GoogleLogin.onSignInAttemptFinished((LoginFragment) mainFragment, data);
         }
     }
 
-    public void showBottomNavigation() {
-        if (navigationView != null) {
-            return;
-        }
-        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
-        ConstraintLayout navigationLayout = (ConstraintLayout)inflater.inflate(R.layout.view_bottom_navigation,null, false);
-        navigationView = navigationLayout.findViewById(R.id.navigation);
-        navigationView.setOnNavigationItemSelectedListener(new OnBottomNavigationItemSelectedListener(this));
-        navigationLayout.removeView(navigationView);
-        layout.addView(navigationView);
-    }
-
-    public void hideBottomNavigation() {
-        if (navigationView == null) {
-            return;
-        }
-        layout.removeView(navigationView);
-        navigationView = null;
-    }
-
-    public boolean setTabView(TabView tabView) {
-        if (this.tabView != null) {
-            if (tabView == null) {
-                this.tabView.hide();
-                return false;
-            }
-            if (this.tabView.getClass().equals(tabView.getClass())) {
-                return false;
-            }
-            this.tabView.hide();
-        }
-        this.tabView = tabView;
-        if (tabView == null) {
-            return false;
-        }
-        this.tabView.show();
-        showBottomNavigation();
+    public boolean setMainFragment(MainActivityFragment fragment) {
+        mainFragment = fragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_fragment, mainFragment)
+                .addToBackStack(null)
+                .commit();
         return true;
+    }
+
+    public void showNavigationFragment() {
+        if (navigationFragment != null) {
+            return;
+        }
+        navigationFragment = new NavigationFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.navigation_fragment, navigationFragment)
+                .commit();
+    }
+
+    public void hideNavigationFragment() {
+        if (navigationFragment == null) {
+            return;
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .remove(navigationFragment)
+                .commit();
+        navigationFragment = null;
     }
 
 }

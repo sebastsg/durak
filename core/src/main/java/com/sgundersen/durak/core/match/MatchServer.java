@@ -1,14 +1,10 @@
 package com.sgundersen.durak.core.match;
 
-import com.sgundersen.durak.core.net.MatchConfiguration;
-import com.sgundersen.durak.core.net.MatchClientState;
-import com.sgundersen.durak.core.net.PlayerAction;
+import com.sgundersen.durak.core.net.match.MatchClientState;
+import com.sgundersen.durak.core.net.match.Action;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MatchServer {
 
@@ -22,40 +18,22 @@ public class MatchServer {
     private final Bout bout;
     private final DiscardPile discardPile = new DiscardPile();
     private final Map<Integer, Hand> hands = new HashMap<>();
-    private int handIdCounter = 0;
 
-    private int attackingPlayerIndex = -1;
-    private int defendingPlayerIndex = -1;
+    private int attackingHandId = -1;
+    private int defendingHandId = -1;
 
-    @Getter
-    private boolean started = false;
-
-    public MatchServer(int id, MatchConfiguration configuration) {
+    public MatchServer(int id, MatchConfiguration configuration, Set<Integer> handIds) {
         this.id = id;
         this.configuration = configuration;
+        for (int handId : handIds) {
+            hands.put(handId, new Hand());
+        }
         talon = new Talon(configuration.getLowestRank());
         bout = new Bout(talon.getBottom().getSuit());
     }
 
-    public int getPlayerCount() {
+    public int getHandCount() {
         return hands.size();
-    }
-
-    public boolean isAcceptingPlayers() {
-        return configuration.getMaxPlayers() > hands.size() && !started;
-    }
-
-    public int addPlayer() {
-        if (!isAcceptingPlayers()) {
-            return -1;
-        }
-        handIdCounter++;
-        hands.put(handIdCounter, new Hand());
-        return handIdCounter;
-    }
-
-    public void removePlayer(int index) {
-        hands.remove(index);
     }
 
     /**
@@ -63,8 +41,8 @@ public class MatchServer {
      * Finally, the defender can take the needed cards.
      */
     private void deal() {
-        Hand attacker = hands.get(attackingPlayerIndex);
-        Hand defender = hands.get(defendingPlayerIndex);
+        Hand attacker = hands.get(attackingHandId);
+        Hand defender = hands.get(defendingHandId);
         attacker.addNeededCards(talon);
         for (Hand hand : hands.values()) {
             if (hand != attacker && hand != defender) {
@@ -79,23 +57,20 @@ public class MatchServer {
             System.err.println("Cannot start a match with less than 2 players.");
             return;
         }
-        if (!started) {
-            started = true;
-            setAttackerAndDefender();
-            deal();
-        }
+        setAttackerAndDefender();
+        deal();
     }
 
     // TODO: This will currently only switch between two players... Support for 3+ players should be added.
     // TODO: Probably need to rework how players are stored in here. Reconsider use of list.
     private void setAttackerAndDefender() {
-        int previousAttackingPlayerIndex = attackingPlayerIndex;
-        int previousDefendingPlayerIndex = defendingPlayerIndex;
+        int previousAttackingPlayerIndex = attackingHandId;
+        int previousDefendingPlayerIndex = defendingHandId;
         for (int key : hands.keySet()) {
-            if (previousAttackingPlayerIndex != key && previousAttackingPlayerIndex == attackingPlayerIndex) {
-                attackingPlayerIndex = key;
-            } else if (previousDefendingPlayerIndex != key && previousDefendingPlayerIndex == defendingPlayerIndex) {
-                defendingPlayerIndex = key;
+            if (previousAttackingPlayerIndex != key && previousAttackingPlayerIndex == attackingHandId) {
+                attackingHandId = key;
+            } else if (previousDefendingPlayerIndex != key && previousDefendingPlayerIndex == defendingHandId) {
+                defendingHandId = key;
             }
         }
     }
@@ -110,13 +85,13 @@ public class MatchServer {
         setAttackerAndDefender();
     }
 
-    private void onAttackingPlayerAction(PlayerAction action) {
+    private void onAttackingHandAction(Action action) {
         if (action.isTakingCards()) {
             System.err.println("Attacker cannot take cards");
         } else if (action.isEndingTurn()) {
             onTurnEnding();
         } else {
-            Hand hand = hands.get(attackingPlayerIndex);
+            Hand hand = hands.get(attackingHandId);
             Card attackingCard = hand.get(action.getCardIndex());
             if (attackingCard == null) {
                 System.err.println("This card does not exist");
@@ -129,8 +104,8 @@ public class MatchServer {
         }
     }
 
-    private void onDefendingPlayerAction(PlayerAction action) {
-        Hand hand = hands.get(defendingPlayerIndex);
+    private void onDefendingHandAction(Action action) {
+        Hand hand = hands.get(defendingHandId);
         if (action.isTakingCards()) {
             if (bout.isAttackerPresent()) {
                 hand.addAll(bout.takeCards());
@@ -146,20 +121,20 @@ public class MatchServer {
             if (bout.canDefend(defendingCard)) {
                 bout.defend(defendingCard);
                 hand.take(action.getCardIndex());
-                if (hand.isEmpty() || hands.get(attackingPlayerIndex).isEmpty()) {
+                if (hand.isEmpty() || hands.get(attackingHandId).isEmpty()) {
                     onTurnEnding();
                 }
             }
         }
     }
 
-    public void processAction(int playerIndex, PlayerAction action) {
-        if (attackingPlayerIndex == playerIndex) {
-            onAttackingPlayerAction(action);
-        } else if (defendingPlayerIndex == playerIndex) {
-            onDefendingPlayerAction(action);
+    public void processAction(int handId, Action action) {
+        if (attackingHandId == handId) {
+            onAttackingHandAction(action);
+        } else if (defendingHandId == handId) {
+            onDefendingHandAction(action);
         } else {
-            System.err.println("Player is not currently attacking or defending");
+            System.err.println("This hand is not currently attacking or defending");
         }
     }
 
@@ -187,8 +162,8 @@ public class MatchServer {
         return MatchOutcome.Defeat;
     }
 
-    public MatchClientState getClientState(int playerIndex) {
-        Hand hand = hands.get(playerIndex);
+    public MatchClientState getClientState(int handId) {
+        Hand hand = hands.get(handId);
         if (hand == null) {
             return null;
         }
@@ -197,17 +172,25 @@ public class MatchServer {
         state.setTalonCardCount(talon.count());
         state.setDiscardPileCount(discardPile.count());
         state.setBottomCard(talon.getBottom());
-        if (playerIndex == defendingPlayerIndex && attackingPlayerIndex != -1) {
-            state.setOtherPlayerHandCount(hands.get(attackingPlayerIndex).count());
-        } else if (playerIndex == attackingPlayerIndex && defendingPlayerIndex != -1) {
-            state.setOtherPlayerHandCount(hands.get(defendingPlayerIndex).count());
+        if (handId == defendingHandId && attackingHandId != -1) {
+            state.setOtherPlayerHandCount(hands.get(attackingHandId).count());
+        } else if (handId == attackingHandId && defendingHandId != -1) {
+            state.setOtherPlayerHandCount(hands.get(defendingHandId).count());
         }
         state.setHand(hand);
         state.setBout(bout);
-        state.setAttacking(attackingPlayerIndex == playerIndex);
-        state.setDefending(defendingPlayerIndex == playerIndex);
-        state.setOutcome(getOutcome(playerIndex));
+        state.setAttacking(attackingHandId == handId);
+        state.setDefending(defendingHandId == handId);
+        state.setOutcome(getOutcome(handId));
         return state;
+    }
+
+    public List<MatchClientState> getAllClientStates() {
+        List<MatchClientState> states = new ArrayList<>();
+        for (int handId : hands.keySet()) {
+            states.add(getClientState(handId));
+        }
+        return states;
     }
 
 }

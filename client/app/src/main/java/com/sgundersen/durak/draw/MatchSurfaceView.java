@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import com.sgundersen.durak.draw.gl.GLMatchRenderer;
-import com.sgundersen.durak.ui.MatchView;
+import com.sgundersen.durak.ui.match.MatchFragment;
 
 import org.joml.Vector2f;
 
@@ -20,7 +20,7 @@ public class MatchSurfaceView extends GLSurfaceView {
     private GLMatchRenderer renderer;
 
     @Setter
-    private MatchView matchView;
+    private MatchFragment matchFragment;
 
     public MatchSurfaceView(Context context) {
         super(context);
@@ -47,8 +47,8 @@ public class MatchSurfaceView extends GLSurfaceView {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 // Having to tap lets the player see the outcome before continuing.
-                if (renderer.getMatchClient().isFinished()) {
-                    matchView.onMatchFinished();
+                if (renderer.getMatchClient().isFinished() && matchFragment != null) {
+                    matchFragment.onMatchFinished();
                 } else {
                     begin.x = event.getX();
                     begin.y = event.getY();
