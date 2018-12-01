@@ -6,13 +6,13 @@ import com.sgundersen.durak.R;
 import com.sgundersen.durak.draw.gl.GLShaderProgram;
 import com.sgundersen.durak.draw.gl.GLTexture;
 
-public class Background {
+public class BackgroundRenderer {
 
     private final Transform transform = new Transform();
     private final Rectangle rectangle = new Rectangle();
     private final GLTexture texture;
 
-    public Background(Context context) {
+    public BackgroundRenderer(Context context) {
         texture = new GLTexture(context, R.drawable.background);
     }
 

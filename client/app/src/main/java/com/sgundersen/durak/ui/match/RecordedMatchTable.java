@@ -11,9 +11,6 @@ import com.sgundersen.durak.core.net.match.FinishedMatchItemInfo;
 import com.sgundersen.durak.core.net.match.FinishedMatchItemInfoList;
 import com.sgundersen.durak.ui.TableRowBuilder;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

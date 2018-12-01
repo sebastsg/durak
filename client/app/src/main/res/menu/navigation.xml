@@ -14,12 +14,6 @@
         android:title="@string/title_leaderboard" />
 
     <item
-        android:id="@+id/navigation_rules"
-        android:checkable="false"
-        android:icon="@drawable/icon_rules"
-        android:title="@string/title_rules" />
-
-    <item
         android:id="@+id/navigation_recordings"
         android:checkable="false"
         android:icon="@drawable/icon_rules"

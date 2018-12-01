@@ -12,7 +12,6 @@ import com.sgundersen.durak.R;
 import com.sgundersen.durak.ui.leaderboard.LeaderboardFragment;
 import com.sgundersen.durak.ui.lobby.LobbyTableFragment;
 import com.sgundersen.durak.ui.match.RecordedMatchTableFragment;
-import com.sgundersen.durak.ui.rules.RulesFragment;
 
 public class NavigationFragment extends MainActivityFragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -30,8 +29,6 @@ public class NavigationFragment extends MainActivityFragment implements BottomNa
                 return getMainActivity().setMainFragment(new LobbyTableFragment());
             case R.id.navigation_leaderboard:
                 return getMainActivity().setMainFragment(new LeaderboardFragment());
-            case R.id.navigation_rules:
-                return getMainActivity().setMainFragment(new RulesFragment());
             case R.id.navigation_recordings:
                 return getMainActivity().setMainFragment(new RecordedMatchTableFragment());
             default:

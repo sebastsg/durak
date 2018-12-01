@@ -6,7 +6,7 @@ import android.opengl.GLSurfaceView;
 
 import com.sgundersen.durak.R;
 import com.sgundersen.durak.control.StateController;
-import com.sgundersen.durak.draw.Background;
+import com.sgundersen.durak.draw.BackgroundRenderer;
 import com.sgundersen.durak.draw.BoutRenderer;
 import com.sgundersen.durak.draw.CardRenderer;
 import com.sgundersen.durak.draw.InfoDisplay;
@@ -48,7 +48,7 @@ public class GLMatchRenderer implements GLSurfaceView.Renderer {
     private TalonRenderer talonRenderer;
     private BoutRenderer boutRenderer;
     private InfoDisplay infoDisplay;
-    private Background background;
+    private BackgroundRenderer backgroundRenderer;
 
     public GLMatchRenderer(Context context, StateController stateController) {
         this.context = context;
@@ -67,7 +67,7 @@ public class GLMatchRenderer implements GLSurfaceView.Renderer {
         otherHandRenderer = new OtherHandRenderer(cardRenderer, matchController.getOtherHandController());
         boutRenderer = new BoutRenderer(cardRenderer, matchController.getBoutController());
         talonRenderer = new TalonRenderer(cardRenderer, matchClient, camera);
-        background = new Background(context);
+        backgroundRenderer = new BackgroundRenderer(context);
         infoDisplay = new InfoDisplay(matchClient);
         isInitialized = true;
     }
@@ -109,7 +109,7 @@ public class GLMatchRenderer implements GLSurfaceView.Renderer {
         shaderProgram.bind();
         shaderProgram.setViewProjection(camera.getView(), camera.getProjection());
         shaderProgram.setColor(new Vector4f(1.0f));
-        background.draw(shaderProgram, camera);
+        backgroundRenderer.draw(shaderProgram, camera);
         myHandRenderer.draw();
         otherHandRenderer.draw();
         talonRenderer.draw();

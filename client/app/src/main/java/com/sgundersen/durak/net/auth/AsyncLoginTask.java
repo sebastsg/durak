@@ -17,7 +17,7 @@ public class AsyncLoginTask extends AsyncHttpTask<String, Void, Boolean> {
 
     public AsyncLoginTask(LoginFragment loginFragment, GoogleSignInAccount account) {
         this.loginFragment = loginFragment;
-        loginAttempt = new LoginAttempt(account.getDisplayName(), account.getEmail(), account.getId(), account.getIdToken());
+        loginAttempt = new LoginAttempt(account.getDisplayName(), account.getId(), account.getIdToken());
     }
 
     @Override

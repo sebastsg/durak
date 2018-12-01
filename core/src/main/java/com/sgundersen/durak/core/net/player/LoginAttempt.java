@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class LoginAttempt {
 
     private String name;
-    private String email;
     private String accountId;
     private String currentTokenId;
 
