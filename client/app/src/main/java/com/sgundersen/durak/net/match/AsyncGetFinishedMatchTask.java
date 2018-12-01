@@ -1,6 +1,6 @@
 package com.sgundersen.durak.net.match;
 
-import com.sgundersen.durak.control.playback.PlaybackStateController;
+import com.sgundersen.durak.control.PlaybackStateController;
 import com.sgundersen.durak.core.net.match.FinishedMatch;
 import com.sgundersen.durak.net.AsyncHttpTask;
 

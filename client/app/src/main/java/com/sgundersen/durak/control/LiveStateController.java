@@ -1,7 +1,5 @@
-package com.sgundersen.durak.control.live;
+package com.sgundersen.durak.control;
 
-import com.sgundersen.durak.control.MatchClient;
-import com.sgundersen.durak.control.StateController;
 import com.sgundersen.durak.net.match.AsyncUpdateClientStateTask;
 
 public class LiveStateController extends StateController {

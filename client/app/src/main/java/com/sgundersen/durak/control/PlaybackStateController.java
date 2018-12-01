@@ -1,7 +1,5 @@
-package com.sgundersen.durak.control.playback;
+package com.sgundersen.durak.control;
 
-import com.sgundersen.durak.control.MatchClient;
-import com.sgundersen.durak.control.StateController;
 import com.sgundersen.durak.core.net.match.FinishedMatch;
 import com.sgundersen.durak.net.match.AsyncGetFinishedMatchTask;
 

@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.sgundersen.durak.control.playback.PlaybackStateController;
+import com.sgundersen.durak.control.PlaybackStateController;
 import com.sgundersen.durak.draw.gl.GLMatchRenderer;
 import com.sgundersen.durak.control.MatchClient;
 import com.sgundersen.durak.ui.match.MatchPlaybackFragment;

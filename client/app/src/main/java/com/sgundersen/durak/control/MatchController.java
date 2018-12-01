@@ -1,7 +1,6 @@
 package com.sgundersen.durak.control;
 
 import com.sgundersen.durak.draw.OrthoCamera;
-import com.sgundersen.durak.control.live.MyHandController;
 
 import org.joml.Vector2f;
 

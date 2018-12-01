@@ -1,12 +1,10 @@
-package com.sgundersen.durak.control.live;
+package com.sgundersen.durak.control;
 
 import com.sgundersen.durak.core.match.Card;
 import com.sgundersen.durak.core.match.Hand;
 import com.sgundersen.durak.core.net.match.MatchClientState;
 import com.sgundersen.durak.draw.OrthoCamera;
 import com.sgundersen.durak.draw.Transform;
-import com.sgundersen.durak.control.HandController;
-import com.sgundersen.durak.control.MatchClient;
 
 import org.joml.Vector2f;
 

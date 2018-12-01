@@ -1,7 +1,7 @@
 package com.sgundersen.durak.draw;
 
 import com.sgundersen.durak.core.match.Hand;
-import com.sgundersen.durak.control.live.MyHandController;
+import com.sgundersen.durak.control.MyHandController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

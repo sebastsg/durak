@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 
 import com.sgundersen.durak.control.MatchClient;
 import com.sgundersen.durak.control.MatchController;
-import com.sgundersen.durak.control.live.LiveStateController;
+import com.sgundersen.durak.control.LiveStateController;
 import com.sgundersen.durak.draw.gl.GLMatchRenderer;
 import com.sgundersen.durak.ui.match.MatchFragment;
 
