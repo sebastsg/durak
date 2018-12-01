@@ -2,17 +2,15 @@ package com.sgundersen.durak.server.service;
 
 import com.sgundersen.durak.core.net.player.Leaderboard;
 import com.sgundersen.durak.core.net.player.LoginAttempt;
-import com.sgundersen.durak.server.match.Player;
 import com.sgundersen.durak.server.auth.GoogleAuthResponse;
-import com.sgundersen.durak.server.db.PlayerProfile;
-import com.sgundersen.durak.server.db.PlayerProfileDao;
+import com.sgundersen.durak.server.db.PlayerEntity;
+import com.sgundersen.durak.server.db.PlayerDao;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -41,18 +39,18 @@ public class PlayerService {
     private static final String JSON_TRUE = jsonb.toJson(true);
     private static final String JSON_FALSE = jsonb.toJson(false);
 
-    private static final Map<String, Player> players = new ConcurrentHashMap<>();
+    private static final Map<String, PlayerEntity> players = new ConcurrentHashMap<>();
 
     @Inject
-    private PlayerProfileDao playerProfileDao;
+    private PlayerDao playerDao;
 
-    public static Player getPlayer(String sessionId) {
+    public static PlayerEntity getPlayer(String sessionId) {
         return players.get(sessionId);
     }
 
-    public static List<Player> getPlayersInMatch(int matchId) {
-        List<Player> playersInMatch = new ArrayList<>();
-        for (Player player : players.values()) {
+    public static List<PlayerEntity> getPlayersInMatch(long matchId) {
+        List<PlayerEntity> playersInMatch = new ArrayList<>();
+        for (PlayerEntity player : players.values()) {
             if (player.getMatchId() == matchId) {
                 playersInMatch.add(player);
             }
@@ -63,7 +61,7 @@ public class PlayerService {
     @GET
     @Path("leaderboard")
     public String leaderboard(@Context HttpServletRequest request) {
-        List<PlayerProfile> leaders = playerProfileDao.getTop(100);
+        List<PlayerEntity> leaders = playerDao.getTop(100);
         Leaderboard leaderboard = new Leaderboard();
         leaderboard.setItems(leaders.stream()
                 .map(item -> new Leaderboard.Item(item.getDisplayName(), item.getVictories(), item.getDefeats(), item.getRatio()))
@@ -75,17 +73,16 @@ public class PlayerService {
     @Path("rename")
     @Consumes(MediaType.APPLICATION_JSON)
     public String rename(@Context HttpServletRequest request, String json) {
-        Player player = getPlayer(request.getSession().getId());
+        String name = jsonb.fromJson(json, String.class);
+        if (!isNewNameAllowed(name)) {
+            return JSON_FALSE;
+        }
+        PlayerEntity player = getPlayer(request.getSession().getId());
         if (player == null) {
             return JSON_FALSE;
         }
-        PlayerProfile profile = playerProfileDao.find(player.getId());
-        if (profile == null) {
-            return JSON_FALSE;
-        }
-        profile.setDisplayName(jsonb.fromJson(json, String.class));
-        player.setName(profile.getDisplayName());
-        playerProfileDao.update(profile);
+        player.setDisplayName(name);
+        playerDao.save(player);
         return JSON_TRUE;
     }
 
@@ -108,22 +105,8 @@ public class PlayerService {
             return JSON_FALSE;
         }
         String accountId = authResponse.getSub();*/
-        String accountId = loginAttempt.getAccountId();
-        createProfile(accountId, loginAttempt.getName());
-        HttpSession session = request.getSession();
-        System.out.println("Player " + loginAttempt.getName() + " (" + loginAttempt.getEmail() + ") [" + accountId + "] has logged in. Session: " + session.getId());
-        players.put(session.getId(), new Player(loginAttempt.getName(), loginAttempt.getEmail(), accountId));
+        players.put(request.getSession().getId(), playerDao.createIfNew(loginAttempt));
         return JSON_TRUE;
-    }
-
-    private void createProfile(String googleAccountId, String displayName) {
-        if (playerProfileDao.find(googleAccountId) != null) {
-            return;
-        }
-        PlayerProfile profile = new PlayerProfile();
-        profile.setGoogleAccountId(googleAccountId);
-        profile.setDisplayName(displayName);
-        playerProfileDao.save(profile);
     }
 
     private GoogleAuthResponse validateTokenId(String tokenId) {
@@ -159,6 +142,10 @@ public class PlayerService {
             System.err.println(e.getMessage());
         }
         return null;
+    }
+
+    private static boolean isNewNameAllowed(String name) {
+        return name == null || 4 > name.length() || name.length() > 18;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.sgundersen.durak.net.match;
 
+import com.sgundersen.durak.control.StateController;
 import com.sgundersen.durak.core.net.match.MatchClientState;
-import com.sgundersen.durak.match.MatchClient;
 import com.sgundersen.durak.net.AsyncHttpTask;
 
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AsyncUpdateClientStateTask extends AsyncHttpTask<String, Void, MatchClientState> {
 
-    private final MatchClient matchClient;
+    private final StateController stateController;
+
+    @Override
+    protected void onPreExecute() {
+        stateController.onWaitingForState();
+    }
 
     @Override
     protected MatchClientState doInBackground(String... strings) {
@@ -18,9 +23,8 @@ public class AsyncUpdateClientStateTask extends AsyncHttpTask<String, Void, Matc
 
     @Override
     protected void onPostExecute(MatchClientState state) {
-        if (state != null) {
-            matchClient.setNextState(state);
-        }
+        stateController.onNextState(state);
+        stateController.onStateReceived();
     }
 
 }

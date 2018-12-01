@@ -2,7 +2,7 @@ package com.sgundersen.durak.net.match;
 
 import com.sgundersen.durak.core.net.match.Action;
 import com.sgundersen.durak.core.net.match.MatchClientState;
-import com.sgundersen.durak.match.MatchClient;
+import com.sgundersen.durak.control.MatchClient;
 import com.sgundersen.durak.net.AsyncHttpTask;
 
 import lombok.RequiredArgsConstructor;

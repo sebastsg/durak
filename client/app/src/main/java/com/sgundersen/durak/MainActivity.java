@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.sgundersen.durak.net.AsyncHttpTask;
 import com.sgundersen.durak.net.auth.GoogleLogin;
 import com.sgundersen.durak.ui.LoginFragment;
 import com.sgundersen.durak.ui.MainActivityFragment;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AsyncHttpTask.setServerPath(getString(R.string.server_path));
         setContentView(R.layout.activity_main);
         setMainFragment(new LoginFragment());
     }

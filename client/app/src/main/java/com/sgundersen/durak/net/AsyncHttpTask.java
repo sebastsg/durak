@@ -1,8 +1,10 @@
 package com.sgundersen.durak.net;
 
+import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
+import com.sgundersen.durak.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,14 +17,15 @@ import java.nio.charset.StandardCharsets;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AsyncHttpTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
-    // TODO: Should be stored somewhere else.
-    private static final String HOST_BASE = "http://durak-dev.sgundersen.com:8085/durak-server/api/";
+    @Setter
+    private static String serverPath;
 
     protected final Gson gson = new Gson();
 
@@ -81,7 +84,7 @@ public abstract class AsyncHttpTask<Params, Progress, Result> extends AsyncTask<
 
     private String request(String method, String path, String body){
         try {
-            URL url = new URL(HOST_BASE + path);
+            URL url = new URL(serverPath + path);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setUseCaches(false);
             connection.setRequestMethod(method);
@@ -89,7 +92,7 @@ public abstract class AsyncHttpTask<Params, Progress, Result> extends AsyncTask<
             writeAll(connection, body);
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
-                log.error("Connection error. Status code: {}", responseCode);
+                log.error("Connection error. Status code: {} ({} {})", responseCode, method, path);
                 return null;
             }
             return readAll(connection);

@@ -11,17 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LobbyItemInfo {
 
-    private int id = -1;
+    private long id = -1;
     private String name = "New match";
     private int maxPlayers = 2;
     private int currentPlayers = 0;
-    private int secondsPerTurn = 10;
 
-    public LobbyItemInfo(int id, int currentPlayers, MatchConfiguration configuration) {
+    public LobbyItemInfo(long id, int currentPlayers, MatchConfiguration configuration) {
         this.id = id;
         name = configuration.getName();
         maxPlayers = configuration.getMaxPlayers();
-        secondsPerTurn = configuration.getSecondsPerTurn();
         this.currentPlayers = currentPlayers;
     }
 

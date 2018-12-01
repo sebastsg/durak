@@ -1,5 +1,6 @@
 package com.sgundersen.durak.server;
 
+import com.sgundersen.durak.server.service.HistoryService;
 import com.sgundersen.durak.server.service.LobbyService;
 import com.sgundersen.durak.server.service.MatchService;
 import com.sgundersen.durak.server.service.PlayerService;
@@ -17,8 +18,9 @@ public class ApplicationConfiguration extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
-        resources.add(MatchService.class);
+        resources.add(HistoryService.class);
         resources.add(LobbyService.class);
+        resources.add(MatchService.class);
         resources.add(PlayerService.class);
         return resources;
     }

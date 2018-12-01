@@ -1,38 +1,39 @@
 package com.sgundersen.durak.server.lobby;
 
 import com.sgundersen.durak.core.match.MatchConfiguration;
-import com.sgundersen.durak.server.match.Player;
+import com.sgundersen.durak.server.db.PlayerEntity;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
-@RequiredArgsConstructor
 @Getter
 public class Lobby {
 
-    private final int id;
-    private final MatchConfiguration configuration;
-    private int playerIdCounter = 0;
-    private static final Map<Integer, Player> players = new ConcurrentHashMap<>();
+    private final long id;
+    private final MatchConfiguration configuration = new MatchConfiguration();
+    private final List<PlayerEntity> players = new ArrayList<>();
 
-    public Set<Integer> getHandIds() {
-        return players.keySet();
+    public Lobby(long id, String name) {
+        this.id = id;
+        configuration.setName(name);
     }
 
-    public int addPlayer(Player player) {
-        if (player == null) {
-            return -1;
+    public List<Long> getPlayerIds() {
+        List<Long> ids = new ArrayList<>();
+        for (PlayerEntity player : players) {
+            ids.add(player.getId());
         }
-        playerIdCounter++;
-        players.put(playerIdCounter, player);
-        return playerIdCounter;
+        return ids;
     }
 
-    public void removePlayer(Player player) {
-        players.remove(player.getHandId());
+    public void addPlayer(PlayerEntity player) {
+        player.setMatchId(id);
+        players.add(player);
+    }
+
+    public void removePlayer(PlayerEntity player) {
+        players.remove(player);
     }
 
     public int getPlayerCount() {

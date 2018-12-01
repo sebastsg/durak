@@ -1,8 +1,11 @@
 <resources>
+    <string name="server_path">http://durak-dev.sgundersen.com:8085/durak-server/api/</string>
+    <string name="client_id">317207620584-26b2id4cr2i4shgan1r6vppk8if5l8h8.apps.googleusercontent.com</string>
     <string name="app_name">Durak</string>
     <string name="title_matches">Matches</string>
     <string name="title_leaderboard">Leaderboard</string>
     <string name="title_rules">Rules</string>
+    <string name="title_recordings">Recordings</string>
     <string name="title_login">Login</string>
     <string name="button_create_match">Create match</string>
     <string name="button_start_match">Start match</string>
@@ -14,5 +17,5 @@
     <string name="ratio">Ratio</string>
     <string name="current">Current</string>
     <string name="max">Max</string>
-    <string name="per_turn">Per turn</string>
+    <string name="played">Played</string>
 </resources>

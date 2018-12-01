@@ -12,9 +12,7 @@ import com.sgundersen.durak.net.lobby.AsyncJoinLobbyTask;
 import com.sgundersen.durak.ui.TableRowBuilder;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 public class LobbyTable implements TableRow.OnClickListener {
 
@@ -33,7 +31,6 @@ public class LobbyTable implements TableRow.OnClickListener {
                 .set(R.id.host, R.string.name)
                 .set(R.id.current_players, R.string.current)
                 .set(R.id.max_players, R.string.max)
-                .set(R.id.turn_time, R.string.per_turn)
                 .bold()
                 .backgroundColor(0xFFEEEEEE)
                 .build()
@@ -45,7 +42,6 @@ public class LobbyTable implements TableRow.OnClickListener {
                 .set(R.id.host, item.getName())
                 .set(R.id.current_players, String.valueOf(item.getCurrentPlayers()))
                 .set(R.id.max_players, String.valueOf(item.getMaxPlayers()))
-                .set(R.id.turn_time, String.valueOf(item.getSecondsPerTurn()) + "s")
                 .tag(item.getId())
                 .click(this)
                 .build()
@@ -62,7 +58,7 @@ public class LobbyTable implements TableRow.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        new AsyncJoinLobbyTask((int) view.getTag(), lobbyTableFragment).execute();
+        new AsyncJoinLobbyTask((long) view.getTag(), lobbyTableFragment).execute();
     }
 
 }

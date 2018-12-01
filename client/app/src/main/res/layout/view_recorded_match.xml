@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
->
+    >
 
-    <com.sgundersen.durak.draw.MatchSurfaceView
-        android:id="@+id/match_surface"
+    <com.sgundersen.durak.draw.RecordedMatchSurfaceView
+        android:id="@+id/recorded_match_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     />

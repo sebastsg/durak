@@ -10,12 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AsyncJoinLobbyTask extends AsyncHttpTask<String, Void, Boolean> {
 
-    private final int lobbyId;
+    private final long matchId;
     private final LobbyTableFragment lobbyTableFragment;
 
     @Override
     protected Boolean doInBackground(String... strings) {
-        return gson.fromJson(post("lobby/join", gson.toJson(lobbyId)), Boolean.class);
+        return gson.fromJson(post("lobby/join", gson.toJson(matchId)), Boolean.class);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.sgundersen.durak.draw;
 
 import com.sgundersen.durak.draw.gl.GLShaderProgram;
 import com.sgundersen.durak.draw.gl.GLTexture;
-import com.sgundersen.durak.match.MatchClient;
+import com.sgundersen.durak.control.MatchClient;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,16 +20,16 @@ public class InfoDisplay {
 
     private final Rectangle rectangle = new Rectangle();
     private final GLTexture background = new GLTexture(0xBB111111);
-    private final GLTexture timer = new GLTexture(0xAA11FF22);
+    private final GLTexture border = new GLTexture(0xAA11FF22);
     private final Transform backgroundTransform = new Transform();
-    private final Transform timerTransform = new Transform();
+    private final Transform borderTransform = new Transform();
 
     public void update(OrthoCamera camera) {
         youAreAttacking.update(camera.width() / 2.0f, 24.0f);
         youAreDefending.update(camera.width() / 2.0f, 24.0f);
         backgroundTransform.size.set(camera.width(), 144.0f);
-        timerTransform.size.set(camera.width(), 16.0f);
-        timerTransform.position.y = backgroundTransform.size.y - timerTransform.size.y / 2.0f;
+        borderTransform.size.set(camera.width(), 16.0f);
+        borderTransform.position.y = backgroundTransform.size.y - borderTransform.size.y / 2.0f;
         victory.update(camera.width() / 2.0f, camera.height() / 3.0f);
         defeat.update(camera.width() / 2.0f, camera.height() / 3.0f);
         drawLabel.update(camera.width() / 2.0f, camera.height() / 3.0f);
@@ -40,8 +40,8 @@ public class InfoDisplay {
         background.bind();
         rectangle.bind();
         rectangle.draw();
-        shaderProgram.setModel(timerTransform.getMatrix());
-        timer.bind();
+        shaderProgram.setModel(borderTransform.getMatrix());
+        border.bind();
         rectangle.draw();
         if (matchClient.getState().isAttacking()) {
             youAreAttacking.draw(shaderProgram);

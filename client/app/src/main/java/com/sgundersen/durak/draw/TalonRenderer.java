@@ -1,7 +1,7 @@
 package com.sgundersen.durak.draw;
 
 import com.sgundersen.durak.core.match.Card;
-import com.sgundersen.durak.match.MatchClient;
+import com.sgundersen.durak.control.MatchClient;
 
 import java.util.ArrayList;
 import java.util.List;

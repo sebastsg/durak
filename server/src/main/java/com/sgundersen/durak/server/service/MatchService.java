@@ -4,12 +4,8 @@ import com.sgundersen.durak.core.match.MatchOutcome;
 import com.sgundersen.durak.core.match.MatchServer;
 import com.sgundersen.durak.core.net.match.Action;
 import com.sgundersen.durak.core.net.match.MatchClientState;
+import com.sgundersen.durak.server.db.*;
 import com.sgundersen.durak.server.lobby.Lobby;
-import com.sgundersen.durak.server.match.Player;
-import com.sgundersen.durak.server.db.PlayerProfile;
-import com.sgundersen.durak.server.db.PlayerProfileDao;
-import com.sgundersen.durak.server.db.RecordedMatch;
-import com.sgundersen.durak.server.db.RecordedMatchDao;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -29,13 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MatchService {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
-    private static final Map<Integer, MatchServer> servers = new ConcurrentHashMap<>();
+    private static final Map<Long, MatchServer> servers = new ConcurrentHashMap<>();
 
-    private static Player getPlayer(HttpServletRequest request) {
+    private static PlayerEntity getPlayer(HttpServletRequest request) {
         return request == null ? null : PlayerService.getPlayer(request.getSession().getId());
     }
 
-    public static MatchServer getServer(Player player) {
+    public static MatchServer getServer(PlayerEntity player) {
         return player == null ? null : servers.get(player.getMatchId());
     }
 
@@ -43,27 +39,27 @@ public class MatchService {
         if (lobby == null) {
             return false;
         }
-        MatchServer server = new MatchServer(lobby.getId(), lobby.getConfiguration(), lobby.getHandIds());
+        MatchServer server = new MatchServer(lobby.getId(), lobby.getConfiguration(), lobby.getPlayerIds());
         server.start();
         servers.put(lobby.getId(), server);
         return true;
     }
 
     @Inject
-    private PlayerProfileDao playerProfileDao;
+    private PlayerDao playerDao;
 
     @Inject
-    private RecordedMatchDao recordedMatchDao;
+    private MatchDao matchDao;
 
     @GET
     @Path("state")
     public String state(@Context HttpServletRequest request) {
-        Player player = getPlayer(request);
+        PlayerEntity player = getPlayer(request);
         MatchServer server = getServer(player);
         if (server == null) {
             return "";
         }
-        MatchClientState state = server.getClientState(player.getHandId());
+        MatchClientState state = server.getClientState(player.getId());
         if (state == null) {
             return "";
         }
@@ -74,7 +70,7 @@ public class MatchService {
     @Path("action")
     @Consumes(MediaType.APPLICATION_JSON)
     public String action(@Context HttpServletRequest request, String json) {
-        Player player = getPlayer(request);
+        PlayerEntity player = getPlayer(request);
         MatchServer server = getServer(player);
         if (server == null) {
             return "";
@@ -83,69 +79,36 @@ public class MatchService {
         if (action == null) {
             return "";
         }
-        int handId = player.getHandId();
-        server.processAction(handId, action);
-        recordMatchState(server);
+        server.onAction(player.getId(), action);
+        saveSnapshot(server);
         checkOutcomeForPlayers(server);
-        return jsonb.toJson(server.getClientState(handId));
-    }
-
-    @GET
-    @Path("recordings")
-    public String recordings() {
-        return jsonb.toJson(recordedMatchDao.getAllMeta());
-    }
-
-    @GET
-    @Path("recording/{id}")
-    public String recording(@PathParam("id") int matchId) {
-        RecordedMatch recordedMatch = recordedMatchDao.find(matchId);
-        if (recordedMatch == null) {
-            return "";
-        }
-        return jsonb.toJson(recordedMatch);
-    }
-
-    private void recordMatchState(MatchServer server) {
-        RecordedMatch recordedMatch = recordedMatchDao.find(server.getId());
-        if (recordedMatch == null) {
-            recordedMatch = new RecordedMatch();
-            recordedMatch.setId(server.getId());
-            recordedMatch.setName(server.getConfiguration().getName());
-            recordedMatch.addSnapshot(server.getAllClientStates());
-            recordedMatchDao.save(recordedMatch);
-        } else {
-            recordedMatch.addSnapshot(server.getAllClientStates());
-            recordedMatchDao.update(recordedMatch);
-        }
+        return jsonb.toJson(server.getClientState(player.getId()));
     }
 
     private void checkOutcomeForPlayers(MatchServer server) {
-        List<Player> players = PlayerService.getPlayersInMatch(server.getId());
-        for (Player player : players) {
+        List<PlayerEntity> players = PlayerService.getPlayersInMatch(server.getId());
+        for (PlayerEntity player : players) {
             checkOutcome(server, player);
         }
     }
 
-    private void checkOutcome(MatchServer server, Player player) {
-        MatchOutcome outcome = server.getClientState(player.getHandId()).getOutcome();
+    private void checkOutcome(MatchServer server, PlayerEntity player) {
+        MatchOutcome outcome = server.getClientState(player.getId()).getOutcome();
         if (outcome == MatchOutcome.Victory) {
-            onVictory(player);
+            player.onVictory();
+            playerDao.save(player);
         } else if (outcome == MatchOutcome.Defeat) {
-            onDefeat(player);
+            player.onDefeat();
+            playerDao.save(player);
         }
     }
 
-    private void onVictory(Player player) {
-        PlayerProfile profile = playerProfileDao.find(player.getId());
-        profile.addVictory();
-        playerProfileDao.update(profile);
-    }
-
-    private void onDefeat(Player player) {
-        PlayerProfile profile = playerProfileDao.find(player.getId());
-        profile.addDefeat();
-        playerProfileDao.update(profile);
+    private void saveSnapshot(MatchServer server) {
+        MatchEntity match = matchDao.find(server.getId());
+        if (match != null) {
+            match.addSnapshot(server.getSnapshot());
+            matchDao.save(match);
+        }
     }
 
 }

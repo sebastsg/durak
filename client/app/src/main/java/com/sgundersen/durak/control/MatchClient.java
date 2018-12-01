@@ -1,21 +1,14 @@
-package com.sgundersen.durak.match;
+package com.sgundersen.durak.control;
 
 import com.sgundersen.durak.core.match.MatchOutcome;
 import com.sgundersen.durak.core.net.match.Action;
 import com.sgundersen.durak.core.net.match.MatchClientState;
-import com.sgundersen.durak.draw.gl.GLMatchRenderer;
 import com.sgundersen.durak.net.match.AsyncSendActionTask;
-import com.sgundersen.durak.net.match.AsyncUpdateClientStateTimerTask;
-
-import java.util.Timer;
 
 import lombok.Getter;
 import lombok.Setter;
 
 public class MatchClient {
-
-    private final GLMatchRenderer renderer;
-    private final Timer refreshTimer = new Timer();
 
     @Getter
     private MatchClientState state;
@@ -23,14 +16,8 @@ public class MatchClient {
     @Setter
     private MatchClientState nextState;
 
-    public MatchClient(GLMatchRenderer renderer) {
-        this.renderer = renderer;
-        refreshTimer.scheduleAtFixedRate(new AsyncUpdateClientStateTimerTask(this), 0, 2000);
-    }
-
-    public void stop() {
-        refreshTimer.cancel();
-    }
+    @Getter
+    private boolean initialized = false;
 
     public boolean isUpdated() {
         return state == nextState;
@@ -38,21 +25,25 @@ public class MatchClient {
 
     public void update() {
         if (state == null && nextState != null) {
-            renderer.setCanInitializeMatch(true);
+            initialized = true;
         }
         state = nextState;
     }
 
+    private void sendAction(Action action) {
+        new AsyncSendActionTask(this, action).execute();
+    }
+
     public void useCard(int cardIndex) {
-        new AsyncSendActionTask(this, Action.useCard(cardIndex)).execute();
+        sendAction(Action.useCard(cardIndex));
     }
 
     public void takeCards() {
-        new AsyncSendActionTask(this, Action.takeCards()).execute();
+        sendAction(Action.takeCards());
     }
 
     public void endTurn() {
-        new AsyncSendActionTask(this, Action.endTurn()).execute();
+        sendAction(Action.endTurn());
     }
 
     public boolean isFinished() {
