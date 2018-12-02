@@ -79,6 +79,19 @@ public class MatchServer {
         setAttackerAndDefender();
     }
 
+    private void onAttackerUsingCard(int cardIndex) {
+        Hand attacker = hands.get(attackingPlayerId);
+        Card attackingCard = attacker.get(cardIndex);
+        if (attackingCard == null) {
+            return;
+        }
+        if (!bout.canAttack(attackingCard)) {
+            return;
+        }
+        bout.attack(attackingCard);
+        attacker.take(cardIndex);
+    }
+
     private void onAttackAction(Action action) {
         if (action.isTakingCards()) {
             return; // Not allowed.
@@ -86,36 +99,42 @@ public class MatchServer {
         if (action.isEndingTurn()) {
             onTurnEnding();
         } else {
-            Hand hand = hands.get(attackingPlayerId);
-            Card attackingCard = hand.get(action.getCardIndex());
-            if (attackingCard == null) {
-                return;
-            }
-            if (bout.canAttack(attackingCard)) {
-                bout.attack(attackingCard);
-                hand.take(action.getCardIndex());
-            }
+            onAttackerUsingCard(action.getCardIndex());
+        }
+    }
+
+    private void onDefenderTakingCards() {
+        if (!bout.isAttackerPresent()) {
+            return;
+        }
+        Hand defender = hands.get(defendingPlayerId);
+        defender.addAll(bout.takeCards());
+        // The turn ends, but the defender keeps his role until the attack is over.
+        // TODO: This might need to be handled differently in 3+ player games.
+        deal();
+    }
+
+    private void onDefenderUsingCard(int cardIndex) {
+        Hand defender = hands.get(defendingPlayerId);
+        Card defendingCard = defender.get(cardIndex);
+        if (defendingCard == null) {
+            return;
+        }
+        if (!bout.canDefend(defendingCard)) {
+            return;
+        }
+        bout.defend(defendingCard);
+        defender.take(cardIndex);
+        if (defender.isEmpty() || hands.get(attackingPlayerId).isEmpty()) {
+            onTurnEnding();
         }
     }
 
     private void onDefendAction(Action action) {
-        Hand hand = hands.get(defendingPlayerId);
         if (action.isTakingCards()) {
-            if (bout.isAttackerPresent()) {
-                hand.addAll(bout.takeCards());
-            }
+            onDefenderTakingCards();
         } else {
-            Card defendingCard = hand.get(action.getCardIndex());
-            if (defendingCard == null) {
-                return;
-            }
-            if (bout.canDefend(defendingCard)) {
-                bout.defend(defendingCard);
-                hand.take(action.getCardIndex());
-                if (hand.isEmpty() || hands.get(attackingPlayerId).isEmpty()) {
-                    onTurnEnding();
-                }
-            }
+            onDefenderUsingCard(action.getCardIndex());
         }
     }
 
