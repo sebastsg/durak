@@ -29,7 +29,7 @@ public class LobbyTable implements TableRow.OnClickListener {
     private void addHeaderRow() {
         table.addView(new TableRowBuilder(context, R.layout.match_row)
                 .set(R.id.host, R.string.name)
-                .set(R.id.current_players, R.string.current)
+                .set(R.id.current_players, R.string.players)
                 .set(R.id.max_players, R.string.max)
                 .bold()
                 .backgroundColor(0xFFEEEEEE)

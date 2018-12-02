@@ -15,7 +15,7 @@
     <string name="victories">Victories</string>
     <string name="defeats">Defeats</string>
     <string name="ratio">Ratio</string>
-    <string name="current">Current</string>
+    <string name="players">Players</string>
     <string name="max">Max</string>
     <string name="played">Played</string>
 </resources>
