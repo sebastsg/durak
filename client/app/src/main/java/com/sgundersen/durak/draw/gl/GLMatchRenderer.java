@@ -6,6 +6,7 @@ import android.opengl.GLSurfaceView;
 
 import com.sgundersen.durak.R;
 import com.sgundersen.durak.control.StateController;
+import com.sgundersen.durak.core.match.CardSuit;
 import com.sgundersen.durak.draw.BackgroundRenderer;
 import com.sgundersen.durak.draw.BoutRenderer;
 import com.sgundersen.durak.draw.CardRenderer;
@@ -13,6 +14,7 @@ import com.sgundersen.durak.draw.InfoDisplay;
 import com.sgundersen.durak.draw.MyHandRenderer;
 import com.sgundersen.durak.draw.OrthoCamera;
 import com.sgundersen.durak.draw.OtherHandRenderer;
+import com.sgundersen.durak.draw.SuitIcon;
 import com.sgundersen.durak.draw.TalonRenderer;
 import com.sgundersen.durak.control.MatchClient;
 import com.sgundersen.durak.control.MatchController;
@@ -68,7 +70,8 @@ public class GLMatchRenderer implements GLSurfaceView.Renderer {
         boutRenderer = new BoutRenderer(cardRenderer, matchController.getBoutController());
         talonRenderer = new TalonRenderer(cardRenderer, matchClient, camera);
         backgroundRenderer = new BackgroundRenderer(context);
-        infoDisplay = new InfoDisplay(matchClient);
+        CardSuit trumpingSuit = matchClient.getState().getBottomCard().getSuit();
+        infoDisplay = new InfoDisplay(matchClient, new SuitIcon(context, trumpingSuit));
         isInitialized = true;
     }
 

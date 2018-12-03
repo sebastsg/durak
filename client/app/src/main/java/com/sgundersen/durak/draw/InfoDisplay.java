@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 public class InfoDisplay {
 
     private final MatchClient matchClient;
+    private final SuitIcon suitIcon;
 
     private final Label youAreAttacking = new Label("Attack your opponent!", 192);
     private final Label youAreDefending = new Label("Defend yourself!", 192);
@@ -19,7 +20,7 @@ public class InfoDisplay {
     private final Label drawLabel = new Label("Draw!", 320);
 
     private final Rectangle rectangle = new Rectangle();
-    private final GLTexture background = new GLTexture(0xBB111111);
+    private final GLTexture background = new GLTexture(0xBB222222);
     private final GLTexture border = new GLTexture(0xAA11FF22);
     private final Transform backgroundTransform = new Transform();
     private final Transform borderTransform = new Transform();
@@ -33,6 +34,7 @@ public class InfoDisplay {
         victory.update(camera.width() / 2.0f, camera.height() / 3.0f);
         defeat.update(camera.width() / 2.0f, camera.height() / 3.0f);
         drawLabel.update(camera.width() / 2.0f, camera.height() / 3.0f);
+        suitIcon.update(camera.width(), backgroundTransform.size.y);
     }
 
     public void draw(GLShaderProgram shaderProgram) {
@@ -43,6 +45,7 @@ public class InfoDisplay {
         shaderProgram.setModel(borderTransform.getMatrix());
         border.bind();
         rectangle.draw();
+        suitIcon.draw(shaderProgram);
         if (matchClient.getState().isAttacking()) {
             youAreAttacking.draw(shaderProgram);
         } else if (matchClient.getState().isDefending()) {

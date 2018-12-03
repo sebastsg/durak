@@ -30,8 +30,7 @@ public class CardRenderer {
     public CardRenderer(Context context, GLShaderProgram shaderProgram, Vector2f cardSize, int maxX, int maxY) {
         this.cardSize = cardSize;
         this.shaderProgram = shaderProgram;
-        texture = new GLTexture();
-        texture.set(BitmapFactory.decodeResource(context.getResources(), R.drawable.cards, new BitmapFactory.Options()));
+        texture = new GLTexture(context, R.drawable.cards);
         float u2 = cardSize.x / (float)texture.getWidth();
         float v2 = cardSize.y / (float)texture.getHeight();
         for (int y = 0; y < maxY; y++) {
