@@ -42,8 +42,12 @@ public class BoutController {
         resize();
         Bout bout = matchClient.getState().getBout();
         List<Card> finishedCards = bout.getFinishedCards();
-        float x = camera.width() / 4.5f + dragStartX;
-        float y = camera.height() / 4.5f + dragStartY;
+        float x = 48.0f + dragStartX;
+        float y = 352.0f + dragStartY;
+        boolean isPortraitMode = camera.height() > camera.width();
+        if (!isPortraitMode) {
+            y -= 128.0f; // To avoid resizing cards. A bit lazy approach, but works for now.
+        }
         for (int i = 0; i < finishedCards.size(); i += 2) {
             Transform attacker = finishedTransforms.get(i);
             Transform defender = finishedTransforms.get(i + 1);
@@ -51,7 +55,12 @@ public class BoutController {
             defender.size.set(cardSize);
             attacker.position.set(x, y);
             defender.position.set(x + cardSize.x * 0.3f, y + cardSize.y * 0.3f);
-            x += cardSize.x * 1.3;
+            x += cardSize.x * 1.35f;
+            if (i == 4 && isPortraitMode) {
+                // 3 attacks are finished, so we skip to the next row with some left padding
+                x = 64.0f + dragStartX;
+                y += cardSize.y * 1.35f;
+            }
         }
         if (bout.isAttackerPresent()) {
             attackingTransform.position.set(x, y);
