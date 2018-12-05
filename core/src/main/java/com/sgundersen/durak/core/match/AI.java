@@ -31,7 +31,7 @@ public class AI {
                 continue;
             }
             boolean isTrump = card.getSuit() == state.getTrumpingCardSuit();
-            if ((trump && isTrump) || (!trump && isTrump)) {
+            if ((trump && isTrump) || (!trump && !isTrump)) {
                 usable.add(card);
             }
         }
@@ -51,9 +51,6 @@ public class AI {
         List<Card> withTrump = getUsable(state, true, true);
         Card weakest = getWeakest(withTrump);
         if (weakest != null) {
-            if (weakest.getRank() > 10 && bout.getFinishedCards().size() <= 4) {
-                return Action.takeCards();
-            }
             return Action.useCard(hand.indexOf(weakest));
         }
         return Action.endTurn();
@@ -72,9 +69,6 @@ public class AI {
         List<Card> withTrump = getUsable(state, false, true);
         Card weakest = getWeakest(withTrump);
         if (weakest == null) {
-            return Action.takeCards();
-        }
-        if (weakest.getRank() > 10 && bout.getFinishedCards().size() <= 4) {
             return Action.takeCards();
         }
         return Action.useCard(hand.indexOf(weakest));

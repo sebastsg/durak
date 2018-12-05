@@ -15,7 +15,7 @@ import com.sgundersen.durak.core.net.lobby.LobbyState;
 import com.sgundersen.durak.net.match.AsyncStartMatchTask;
 import com.sgundersen.durak.net.lobby.AsyncViewLobbyTimerTask;
 import com.sgundersen.durak.ui.MainActivityFragment;
-import com.sgundersen.durak.ui.match.MatchFragment;
+import com.sgundersen.durak.ui.match.LiveMatchFragment;
 
 import java.util.Timer;
 
@@ -82,7 +82,7 @@ public class LobbyFragment extends MainActivityFragment implements View.OnClickL
     }
 
     public void onMatchStarted() {
-        getMainActivity().setMainFragment(new MatchFragment());
+        getMainActivity().setMainFragment(new LiveMatchFragment());
     }
 
 }

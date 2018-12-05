@@ -28,21 +28,21 @@ public class MatchController {
     }
 
     public void onTouchDown(Vector2f begin) {
-        if (!matchClient.isFinished() && matchClient.isInitialized()) {
+        if (matchClient.isInteractive()) {
             myHandController.startDrag(begin);
             boutController.startDrag(begin);
         }
     }
 
     public void onTouchMove(Vector2f begin, Vector2f end, Vector2f delta) {
-        if (!matchClient.isFinished() && matchClient.isInitialized()) {
+        if (matchClient.isInteractive()) {
             myHandController.continueDrag(delta);
             boutController.continueDrag(delta);
         }
     }
 
     public void onTouchUp(Vector2f begin, Vector2f end, Vector2f delta) {
-        if (!matchClient.isFinished() && matchClient.isInitialized()) {
+        if (matchClient.isInteractive()) {
             myHandController.endDrag();
             boutController.endDrag();
         }

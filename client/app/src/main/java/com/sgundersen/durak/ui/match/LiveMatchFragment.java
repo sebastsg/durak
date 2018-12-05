@@ -7,19 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sgundersen.durak.R;
-import com.sgundersen.durak.control.playback.PlaybackStateController;
+import com.sgundersen.durak.control.live.LiveStateController;
 import com.sgundersen.durak.draw.MatchSurfaceView;
 
-import lombok.Getter;
+public class LiveMatchFragment extends MatchFragment {
 
-public class MatchPlaybackFragment extends MatchFragment {
-
-    @Getter
-    private final long matchId;
-
-    public MatchPlaybackFragment(long matchId) {
-        super(new PlaybackStateController(matchId));
-        this.matchId = matchId;
+    public LiveMatchFragment() {
+        super(new LiveStateController());
     }
 
     @Override

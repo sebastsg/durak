@@ -1,9 +1,11 @@
 package com.sgundersen.durak.core.match;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.*;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +18,13 @@ public class Bout {
     private CardSuit trumpingCardSuit;
     private Card attackingCard;
     private int attackCount = 0;
+
+    public Bout(Bout that) {
+        finishedCards.addAll(that.finishedCards);
+        trumpingCardSuit = that.trumpingCardSuit;
+        attackingCard = that.attackingCard;
+        attackCount = that.attackCount;
+    }
 
     public Bout(CardSuit trumpingCardSuit) {
         this.trumpingCardSuit = trumpingCardSuit;

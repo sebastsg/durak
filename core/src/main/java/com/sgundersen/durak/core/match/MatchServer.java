@@ -38,6 +38,11 @@ public class MatchServer {
         for (long handId : handIds) {
             hands.put(handId, new Hand());
         }
+        deal();
+    }
+
+    public MatchServer() {
+        this(0L, new MatchConfiguration(), new ArrayList<Long>(){{ add(0L); add(1L); }});
     }
 
     public int getHandCount() {
@@ -58,11 +63,6 @@ public class MatchServer {
             }
         }
         defender.addNeededCards(talon);
-    }
-
-    public void start() {
-        setAttackerAndDefender();
-        deal();
     }
 
     // TODO: Make it work for 3+ players
@@ -188,8 +188,8 @@ public class MatchServer {
         } else if (playerId == attackingPlayerId && defendingPlayerId != -1) {
             state.setOtherPlayerHandCount(hands.get(defendingPlayerId).count());
         }
-        state.setHand(hand);
-        state.setBout(bout);
+        state.setHand(new Hand(hand));
+        state.setBout(new Bout(bout));
         state.setAttacking(attackingPlayerId == playerId);
         state.setDefending(defendingPlayerId == playerId);
         state.setOutcome(getOutcome(playerId));

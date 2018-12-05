@@ -11,6 +11,7 @@ import com.sgundersen.durak.R;
 import com.sgundersen.durak.net.lobby.AsyncCreateLobbyTask;
 import com.sgundersen.durak.net.lobby.AsyncGetLobbiesTimerTask;
 import com.sgundersen.durak.ui.MainActivityFragment;
+import com.sgundersen.durak.ui.match.LocalMatchFragment;
 
 import java.util.Timer;
 
@@ -48,6 +49,8 @@ public class LobbyTableFragment extends MainActivityFragment implements View.OnC
     public void onClick(View view) {
         if (view.getId() == R.id.create_lobby_button) {
             new AsyncCreateLobbyTask(this).execute();
+        } else if (view.getId() == R.id.play_local_button) {
+            getMainActivity().setMainFragment(new LocalMatchFragment());
         }
     }
 

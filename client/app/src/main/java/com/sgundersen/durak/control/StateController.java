@@ -1,6 +1,7 @@
 package com.sgundersen.durak.control;
 
 import com.sgundersen.durak.core.net.match.MatchClientState;
+import com.sgundersen.durak.ui.match.MatchFragment;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,10 @@ public abstract class StateController {
 
     @Getter
     private boolean waiting = false;
+
+    public boolean isFinished() {
+        return getMatchClient().isFinished();
+    }
 
     protected boolean isReady() {
         return matchClient.isUpdated() && System.currentTimeMillis() > nextUpdateMs && !waiting;
@@ -37,6 +42,12 @@ public abstract class StateController {
 
     public void update() {
         matchClient.update();
+    }
+
+    public void onTap(MatchFragment matchFragment) {
+        if (isFinished()) {
+            matchFragment.onMatchFinished();
+        }
     }
 
 }

@@ -14,10 +14,19 @@
 
     <Button
         android:id="@+id/create_lobby_button"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="130dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_create_match"
+        app:layout_constraintBottom_toBottomOf="parent"
+    />
+
+    <Button
+        android:id="@+id/play_local_button"
+        android:layout_marginBottom="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_play_local"
         app:layout_constraintBottom_toBottomOf="parent"
     />
 

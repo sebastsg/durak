@@ -39,9 +39,7 @@ public class MatchService {
         if (lobby == null) {
             return false;
         }
-        MatchServer server = new MatchServer(lobby.getId(), lobby.getConfiguration(), lobby.getPlayerIds());
-        server.start();
-        servers.put(lobby.getId(), server);
+        servers.put(lobby.getId(), new MatchServer(lobby.getId(), lobby.getConfiguration(), lobby.getPlayerIds()));
         return true;
     }
 

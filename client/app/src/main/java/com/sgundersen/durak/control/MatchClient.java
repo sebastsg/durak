@@ -3,12 +3,11 @@ package com.sgundersen.durak.control;
 import com.sgundersen.durak.core.match.MatchOutcome;
 import com.sgundersen.durak.core.net.match.Action;
 import com.sgundersen.durak.core.net.match.MatchClientState;
-import com.sgundersen.durak.net.match.AsyncSendActionTask;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public class MatchClient {
+public abstract class MatchClient {
 
     @Getter
     private MatchClientState state;
@@ -30,24 +29,26 @@ public class MatchClient {
         state = nextState;
     }
 
-    private void sendAction(Action action) {
-        new AsyncSendActionTask(this, action).execute();
-    }
+    protected abstract void onAction(Action action);
 
     public void useCard(int cardIndex) {
-        sendAction(Action.useCard(cardIndex));
+        onAction(Action.useCard(cardIndex));
     }
 
     public void takeCards() {
-        sendAction(Action.takeCards());
+        onAction(Action.takeCards());
     }
 
     public void endTurn() {
-        sendAction(Action.endTurn());
+        onAction(Action.endTurn());
     }
 
     public boolean isFinished() {
         return state.getOutcome() != MatchOutcome.NotYetDecided;
+    }
+
+    public boolean isInteractive() {
+        return !isFinished() && isInitialized();
     }
 
 }

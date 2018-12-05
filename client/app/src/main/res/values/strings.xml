@@ -7,8 +7,9 @@
     <string name="title_rules">Rules</string>
     <string name="title_recordings">Recordings</string>
     <string name="title_login">Login</string>
-    <string name="button_create_match">Create match</string>
+    <string name="button_create_match">Create online match</string>
     <string name="button_start_match">Start match</string>
+    <string name="button_play_local">Play against computer</string>
     <string name="placeholder">[Placeholder]</string>
     <string name="rank">Rank</string>
     <string name="name">Name</string>

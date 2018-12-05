@@ -1,9 +1,10 @@
-package com.sgundersen.durak.control;
+package com.sgundersen.durak.control.playback;
 
+import com.sgundersen.durak.control.StateController;
 import com.sgundersen.durak.core.net.match.FinishedMatch;
 import com.sgundersen.durak.net.match.AsyncGetFinishedMatchTask;
+import com.sgundersen.durak.ui.match.MatchFragment;
 
-import lombok.Getter;
 import lombok.Setter;
 
 public class PlaybackStateController extends StateController {
@@ -11,13 +12,10 @@ public class PlaybackStateController extends StateController {
     @Setter
     private FinishedMatch finishedMatch;
 
-    @Getter
-    private boolean finished = false;
-
     private int currentSnapshot = -1;
 
-    public PlaybackStateController(MatchClient matchClient, long matchId) {
-        super(matchClient);
+    public PlaybackStateController(long matchId) {
+        super(new PlaybackMatchClient());
         new AsyncGetFinishedMatchTask(this, matchId).execute();
     }
 
@@ -29,15 +27,28 @@ public class PlaybackStateController extends StateController {
         }
     }
 
+    @Override
+    public boolean isFinished() {
+        return currentSnapshot >= finishedMatch.getTotalSnapshots();
+    }
+
     public void next() {
         if (isWaiting()) {
             return;
         }
         currentSnapshot++;
-        finished = currentSnapshot >= finishedMatch.getTotalSnapshots();
-        if (!finished) {
+        if (!isFinished()) {
             onStateReceived();
             onNextState(finishedMatch.getSnapshot(currentSnapshot).getClientState(0));
+        }
+    }
+
+    @Override
+    public void onTap(MatchFragment matchFragment) {
+        if (isFinished()) {
+            matchFragment.onMatchFinished();
+        } else {
+            next();
         }
     }
 

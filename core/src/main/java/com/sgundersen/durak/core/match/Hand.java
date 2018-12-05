@@ -14,6 +14,10 @@ public class Hand {
 
     private List<Card> cards = new ArrayList<>();
 
+    public Hand(Hand that) {
+        cards.addAll(that.cards);
+    }
+
     public void add(Card card) {
         cards.add(card);
     }
@@ -44,7 +48,6 @@ public class Hand {
             cards.remove(index);
             return card;
         } catch (IndexOutOfBoundsException e) {
-            System.err.println("Card " + index + " was not found. Stack trace: "  + e.getMessage());
             return null;
         }
     }
