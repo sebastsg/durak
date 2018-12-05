@@ -26,6 +26,10 @@ public class Hand {
         return cards.isEmpty();
     }
 
+    public int indexOf(Card card) {
+        return cards.indexOf(card);
+    }
+
     public Card get(int index) {
         try {
             return cards.get(index);

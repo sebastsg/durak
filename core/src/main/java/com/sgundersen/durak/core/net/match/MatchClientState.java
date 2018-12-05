@@ -1,9 +1,6 @@
 package com.sgundersen.durak.core.net.match;
 
-import com.sgundersen.durak.core.match.Bout;
-import com.sgundersen.durak.core.match.Card;
-import com.sgundersen.durak.core.match.Hand;
-import com.sgundersen.durak.core.match.MatchOutcome;
+import com.sgundersen.durak.core.match.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +14,7 @@ public class MatchClientState {
     private int talonCardCount;
     private int discardPileCount;
     private int otherPlayerHandCount;
+    private CardSuit trumpingCardSuit;
     private Card bottomCard;
     private Hand hand;
     private Bout bout;

@@ -15,6 +15,7 @@ public class MatchServer {
     @Getter
     private final MatchConfiguration configuration;
 
+    private final CardSuit trumpingCardSuit;
     private final Talon talon;
     private final Bout bout;
     private final DiscardPile discardPile = new DiscardPile();
@@ -28,6 +29,7 @@ public class MatchServer {
         this.configuration = configuration;
         talon = new Talon(configuration.getLowestRank());
         bout = new Bout(talon.getBottom().getSuit());
+        trumpingCardSuit = talon.getBottom().getSuit();
         if (2 > handIds.size()) {
             return;
         }
@@ -179,6 +181,7 @@ public class MatchServer {
         state.setPlayerCount(hands.size());
         state.setTalonCardCount(talon.count());
         state.setDiscardPileCount(discardPile.count());
+        state.setTrumpingCardSuit(trumpingCardSuit);
         state.setBottomCard(talon.getBottom());
         if (playerId == defendingPlayerId && attackingPlayerId != -1) {
             state.setOtherPlayerHandCount(hands.get(attackingPlayerId).count());
