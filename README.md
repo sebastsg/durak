@@ -91,7 +91,7 @@ There is a simple TableRowBuilder class to allow for building tables quicker, an
 * * POST start -> Boolean 
 * MatchService
 * * GET state -> net.match.MatchClientState
-* * GET action -> net.match.Action 
+* * POST action -> net.match.MatchClientState 
 * HistoryService
 * * GET list -> net.match.FinishedMatchInfoList
 * * GET match(id) -> net.match.FinishedMatch
