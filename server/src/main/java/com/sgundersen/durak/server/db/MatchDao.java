@@ -19,7 +19,8 @@ public class MatchDao {
         CriteriaQuery<MatchEntity> query = builder.createQuery(MatchEntity.class);
         Root<MatchEntity> root = query.from(MatchEntity.class);
         query.multiselect(root.get("id"), root.get("createdAt"), root.get("name"));
-        return entityManager.createQuery(query).getResultList();
+        query.orderBy(builder.desc(root.get("createdAt")));
+        return entityManager.createQuery(query).setMaxResults(100).getResultList();
     }
 
     public MatchEntity find(long id) {
