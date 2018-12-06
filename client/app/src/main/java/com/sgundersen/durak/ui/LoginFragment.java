@@ -43,7 +43,7 @@ public class LoginFragment extends MainActivityFragment implements View.OnClickL
     }
 
     public void onLoginSuccess() {
-        getMainActivity().setMainFragment(new LobbyTableFragment());
+        getMainActivity().setMainFragmentWithoutBack(new LobbyTableFragment());
         getMainActivity().showNavigationFragment();
     }
 

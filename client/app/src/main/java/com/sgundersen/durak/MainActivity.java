@@ -41,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public boolean setMainFragmentWithoutBack(MainActivityFragment fragment) {
+        mainFragment = fragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_fragment, mainFragment)
+                .commit();
+        return true;
+    }
+
     public void showNavigationFragment() {
         if (navigationFragment != null) {
             return;

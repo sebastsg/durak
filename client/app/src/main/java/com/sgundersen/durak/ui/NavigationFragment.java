@@ -26,11 +26,11 @@ public class NavigationFragment extends MainActivityFragment implements BottomNa
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_matches:
-                return getMainActivity().setMainFragment(new LobbyTableFragment());
+                return getMainActivity().setMainFragmentWithoutBack(new LobbyTableFragment());
             case R.id.navigation_leaderboard:
-                return getMainActivity().setMainFragment(new LeaderboardFragment());
+                return getMainActivity().setMainFragmentWithoutBack(new LeaderboardFragment());
             case R.id.navigation_recordings:
-                return getMainActivity().setMainFragment(new RecordedMatchTableFragment());
+                return getMainActivity().setMainFragmentWithoutBack(new RecordedMatchTableFragment());
             default:
                 return false;
         }
