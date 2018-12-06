@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LobbyTableFragment extends MainActivityFragment implements View.OnClickListener {
 
-    private Timer refreshTimer = new Timer();
+    private Timer refreshTimer;
     private LobbyTable lobbyTable;
 
     @Override
@@ -36,6 +36,7 @@ public class LobbyTableFragment extends MainActivityFragment implements View.OnC
     public void onStart() {
         super.onStart();
         getMainActivity().showNavigationFragment();
+        refreshTimer = new Timer();
         refreshTimer.scheduleAtFixedRate(new AsyncGetLobbiesTimerTask(lobbyTable), 0, 2000);
     }
 
