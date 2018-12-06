@@ -27,8 +27,8 @@ public class LobbyTableFragment extends MainActivityFragment implements View.OnC
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lobby_table_view, null);
         lobbyTable = new LobbyTable(view, this);
-        Button button = view.findViewById(R.id.create_lobby_button);
-        button.setOnClickListener(this);
+        view.findViewById(R.id.create_lobby_button).setOnClickListener(this);
+        view.findViewById(R.id.play_local_button).setOnClickListener(this);
         return view;
     }
 

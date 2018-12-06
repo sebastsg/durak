@@ -16,7 +16,7 @@
     <item
         android:id="@+id/navigation_recordings"
         android:checkable="false"
-        android:icon="@drawable/icon_rules"
+        android:icon="@drawable/icon_recordings"
         android:title="@string/title_recordings" />
 
 </menu>
