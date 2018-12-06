@@ -6,7 +6,7 @@ import org.joml.Vector2f;
 
 public class Rectangle {
 
-    private GLVertexArray vertexArray = new GLVertexArray(new int[]{2, 2});
+    private final GLVertexArray vertexArray = new GLVertexArray(new int[]{2, 2});
 
     public Rectangle() {
         vertexArray.setIndices(new short[]{0, 1, 2, 3, 2, 0});

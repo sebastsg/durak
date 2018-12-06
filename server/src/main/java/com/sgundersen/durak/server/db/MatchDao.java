@@ -3,7 +3,6 @@ package com.sgundersen.durak.server.db;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -24,13 +23,7 @@ public class MatchDao {
     }
 
     public MatchEntity find(long id) {
-        TypedQuery<MatchEntity> query = entityManager.createNamedQuery("match.findById", MatchEntity.class);
-        query.setParameter("id", id);
-        List<MatchEntity> results = query.getResultList();
-        if (results.isEmpty()) {
-            return null;
-        }
-        return results.get(0);
+        return entityManager.find(MatchEntity.class, id);
     }
 
     public void save(MatchEntity match) {

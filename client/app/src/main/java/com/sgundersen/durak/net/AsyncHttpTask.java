@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
-import com.sgundersen.durak.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
