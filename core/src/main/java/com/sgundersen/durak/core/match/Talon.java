@@ -1,5 +1,7 @@
 package com.sgundersen.durak.core.match;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,6 +10,7 @@ public class Talon {
 
     private static final int CARDS_PER_SUIT = 13;
 
+    @Getter
     private final int lowestRank;
 
     private final List<Card> cards = new ArrayList<>();
