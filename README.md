@@ -1,5 +1,9 @@
 # durak
 Project for course: Mobile and distributed systems
+<div>
+<img src="https://sgundersen.com/projects/d/1.png" alt="" width="45%">
+<img src="https://sgundersen.com/projects/d/2.png" alt="" width="50%">
+</div>
 
 ## Core library
 All HTTP responses from the server lies under *.core.net, as well as POST body messages.
